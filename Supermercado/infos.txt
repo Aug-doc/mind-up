@@ -1,5 +1,0 @@
-fonte: poppins (buscar no google fonts)
---background-header: #FCF0D8;
---background-main: #CC;
---text-color: #1C1B1B;
---primary-color: #FFB400; 
