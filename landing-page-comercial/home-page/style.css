@@ -124,3 +124,10 @@ header {
     width: fit-content;  /* pro botao nao esticar ate o caralho */
     font-size: 23px;
 }
+
+/*ÍCONE DE VOLTAR DA TELA DE CADASTRO/LOGIN*/
+.home-icon {
+    width: 20px;
+}
+
+
