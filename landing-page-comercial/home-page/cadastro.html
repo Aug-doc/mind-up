@@ -19,7 +19,7 @@
         <section>
             <h1>Criar Conta</h1>
 
-            <form action="#" method="post">
+            <form id="meuFormulario" action="#" method="post">
 
                 <div>
                     <label for="nome">Nome completo</label>
@@ -66,5 +66,53 @@
     </main>
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    // 1. Conectar a Landing Page com o SEU projeto do Supabase
+    const SUPABASE_URL = "https://dzyhycnydelypjikdzfz.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_AorNgK-aFdY54z9Fjb_8Xg_E2VSrQ_y";
+
+    // Correção sutil: Inicialização correta usando a biblioteca global do CDN
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // 2. Escutar o clique no botão de "Enviar" do formulário
+    const formulario = document.getElementById('meuFormulario'); 
+
+    formulario.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Impede a página de recarregar
+
+        // 3. Pegar o que o usuário digitou nos campos
+        const emailUsuario = document.getElementById('email').value;
+        const senhaUsuario = document.getElementById('senha').value;
+        const confirmarSenhaUsuario = document.getElementById('confirmarSenha').value;
+
+        // MELHORIA PARA O TCC: Validar se as senhas são iguais antes de mandar pro banco
+        if (senhaUsuario !== confirmarSenhaUsuario) {
+            alert("As senhas não coincidem! Verifique e tente novamente.");
+            return; // Para a execução aqui
+        }
+
+        try {
+            // 4. Enviar os dados para a ferramenta de Autenticação do Supabase
+            const { data, error } = await _supabase.auth.signUp({
+                email: emailUsuario,
+                password: senhaUsuario,
+            });
+
+            if (error) {
+                alert("Erro ao cadastrar: " + error.message);
+            } else {
+                alert("Cadastro realizado com sucesso! Agora você pode logar no app.");
+                formulario.reset(); // Limpa os campos do formulário
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert("Ocorreu um erro inesperado.");
+        }
+    });
+</script>
 
 </html>
