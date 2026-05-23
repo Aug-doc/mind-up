@@ -42,12 +42,15 @@ header {
 
 .navegacao a {
     text-decoration: none;
-    color: black;
     font-weight: bold;
+    color: black;
     background-color: var(--LightPink);
     padding: 9px 25px;
     border-radius: 100px;
     border: 1px solid;
+    display: inline-block;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .Logo {
@@ -121,8 +124,11 @@ header {
     background-image: linear-gradient(to right, #abc9ff, #deb1ff);
     border-radius: 200px;
     padding: 12px 30px;
-    width: fit-content;  /* pro botao nao esticar ate o caralho */
+    width: fit-content;
     font-size: 23px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(171, 201, 255, 0.3);
 }
 
 /*ÍCONE DE VOLTAR DA TELA DE CADASTRO/LOGIN*/
@@ -130,4 +136,18 @@ header {
     width: 20px;
 }
 
+/* ANIMAÇÕES DOS BOTÕES */
 
+.navegacao a:hover {
+    transform: scale(1.08);
+}
+
+.botaoExperimente:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(222, 177, 255, 0.6);
+}
+
+.botaoExperimente:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(171, 201, 255, 0.4);
+}
