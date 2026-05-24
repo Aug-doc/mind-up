@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MindUp</string>
+    <string name="login_title">Bem-vindo ao MindUp</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Senha</string>
+    <string name="login_button">Entrar</string>
+    <string name="forgot_password">Esqueceu sua senha?</string>
+    <string name="register_prompt">Ainda não tem uma conta? Cadastre-se aqui.</string>
+</resources>
