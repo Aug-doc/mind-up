@@ -1,5 +1,4 @@
 * {
-    scroll-behavior: smooth;
     margin: 0;
 }
 
@@ -130,12 +129,6 @@ header {
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(171, 201, 255, 0.3);
 }
-
-/*ÍCONE DE VOLTAR DA TELA DE CADASTRO/LOGIN*/
-.home-icon {
-    width: 20px;
-}
-
 /* ANIMAÇÕES DOS BOTÕES */
 
 .navegacao a:hover {
