@@ -36,6 +36,11 @@ form.addEventListener('submit', async (e) => {
 
         if (dados.sucesso) {
 
+            localStorage.setItem(
+                'usuario',
+                JSON.stringify(dados.usuario)
+            );
+
             window.location.href =
                 'index.html';
 

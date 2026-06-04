@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const db = require('./db');
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
     res.send('Backend funcionando');
 });
 
-app.post('/cadastro', (req, res) => {
+app.post('/cadastro', async (req, res) => {
 
     const {
         nome,
@@ -22,30 +23,109 @@ app.post('/cadastro', (req, res) => {
         senha
     } = req.body;
 
-    const sql = `
-        INSERT INTO usuarios
-        (nome, username, email, senha)
-        VALUES (?, ?, ?, ?)
+    const verificarSql = `
+        SELECT *
+        FROM usuarios
+        WHERE email = ? OR username = ?
     `;
 
     db.query(
-        sql,
-        [nome, username, email, senha],
-        (err, result) => {
+        verificarSql,
+        [email, username],
+        async (err, resultado) => {
 
             if (err) {
 
                 console.log(err);
 
                 return res.status(500).json({
-                    mensagem: 'Erro no cadastro'
+                    mensagem: 'Erro no servidor'
                 });
 
             }
 
-            res.json({
-                mensagem: 'Usuário cadastrado com sucesso'
-            });
+            if (resultado.length > 0) {
+
+                const usuarioExistente =
+                    resultado[0];
+
+                if (
+                    usuarioExistente.email === email
+                ) {
+
+                    return res.status(400).json({
+                        mensagem:
+                            'Este e-mail já está cadastrado'
+                    });
+
+                }
+
+                if (
+                    usuarioExistente.username === username
+                ) {
+
+                    return res.status(400).json({
+                        mensagem:
+                            'Este nome de usuário já está em uso'
+                    });
+
+                }
+
+            }
+
+            try {
+
+                const senhaHash =
+                    await bcrypt.hash(
+                        senha,
+                        10
+                    );
+
+                const inserirSql = `
+                    INSERT INTO usuarios
+                    (nome, username, email, senha)
+                    VALUES (?, ?, ?, ?)
+                `;
+
+                db.query(
+                    inserirSql,
+                    [
+                        nome,
+                        username,
+                        email,
+                        senhaHash
+                    ],
+                    (err) => {
+
+                        if (err) {
+
+                            console.log(err);
+
+                            return res.status(500).json({
+                                mensagem:
+                                    'Erro no cadastro'
+                            });
+
+                        }
+
+                        res.json({
+                            mensagem:
+                                'Usuário cadastrado com sucesso'
+                        });
+
+                    }
+                );
+
+            } catch (erro) {
+
+                console.log(erro);
+
+                res.status(500).json({
+                    mensagem:
+                        'Erro ao criptografar senha'
+                });
+
+            }
 
         }
     );
@@ -58,13 +138,13 @@ app.post('/login', (req, res) => {
 
     const sql = `
         SELECT * FROM usuarios
-        WHERE email = ? AND senha = ?
+        WHERE email = ?
     `;
 
     db.query(
         sql,
-        [email, senha],
-        (err, result) => {
+        [email],
+        async (err, result) => {
 
             if (err) {
 
@@ -76,21 +156,42 @@ app.post('/login', (req, res) => {
 
             }
 
-            if (result.length > 0) {
+            if (result.length === 0) {
 
-                res.json({
-                    sucesso: true,
-                    mensagem: 'Login realizado'
-                });
-
-            } else {
-
-                res.status(401).json({
+                return res.status(401).json({
                     sucesso: false,
                     mensagem: 'Email ou senha incorretos'
                 });
 
             }
+
+            const usuario = result[0];
+
+            const senhaCorreta =
+                await bcrypt.compare(
+                    senha,
+                    usuario.senha
+                );
+
+            if (!senhaCorreta) {
+
+                return res.status(401).json({
+                    sucesso: false,
+                    mensagem: 'Email ou senha incorretos'
+                });
+
+            }
+
+            res.json({
+                sucesso: true,
+                mensagem: 'Login realizado',
+                usuario: {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    username: usuario.username,
+                    email: usuario.email
+                }
+            });
 
         }
     );

@@ -20,9 +20,29 @@ form.addEventListener('submit', async (e) => {
     const confirmarSenha =
         document.getElementById('confirmarSenha').value;
 
+    if (
+        !nome.trim() ||
+        !email.trim() ||
+        !username.trim()
+    ) {
+
+        alert('Preencha todos os campos');
+
+        return;
+
+    }
+
     if (senha !== confirmarSenha) {
 
         alert('As senhas não coincidem');
+
+        return;
+
+    }
+
+    if (senha.length < 8) {
+
+        alert('A senha deve ter pelo menos 8 caracteres');
 
         return;
 
